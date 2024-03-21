@@ -8,6 +8,32 @@ from project.db import get_db
 
 bp = Blueprint('movie', __name__)
 
+from project.db import get_db
+
+def get_movie_by_title(title):
+    """
+    Fetches a single movie with the matching title from the database.
+    
+    :param title: The title of the movie to fetch.
+    :return: A dictionary containing the movie details or None if not found.
+    """
+    db = get_db()
+    movie = db.execute(
+        'SELECT id, released, title, summary FROM movie WHERE UPPER(title) = UPPER(?)',
+        (title,)
+    ).fetchone()
+    
+    if movie is None:
+        return None
+
+    return {
+        'id': movie['id'],
+        'released': movie['released'],
+        'title': movie['title'],
+        'summary': movie['summary']
+    }
+
+
 @bp.route('/movies')
 def index():
     db = get_db()
@@ -43,12 +69,7 @@ def create():
             error = 'Location is required.'
 
         db = get_db()
-        movie = db.execute(
-            '''SELECT title
-            FROM movie
-            WHERE UPPER(title) = UPPER(?)''',
-            (title,)
-        ).fetchone()
+        movie = get_movie_by_title(title)
 
         if movie:
             error = 'That movie already exists!'

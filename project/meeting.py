@@ -8,6 +8,10 @@ from project.db import get_db
 
 bp = Blueprint('meeting', __name__)
 
+from .movie import get_movie_by_title
+
+from datetime import datetime
+
 @bp.route('/')
 def index():
     db = get_db()
@@ -27,8 +31,6 @@ def create():
         location = request.form['location']
         error = None
 
-        from datetime import datetime
-
         # Parse the release_date from the form
         parsed_time = datetime.strptime(time, '%m-%d-%Y %H:%M:%S')
 
@@ -41,12 +43,7 @@ def create():
             error = 'Location is required.'
 
         db = get_db()
-        movie = db.execute(
-            '''SELECT id, title
-            FROM movie
-            WHERE UPPER(title) = UPPER(?)''',
-            (title,)
-        ).fetchone()
+        movie = get_movie_by_title(title)
 
         if not movie:
             error = 'That movie does not exist yet!'
@@ -69,14 +66,14 @@ def get_post(id, check_author=True):
     meeting = get_db().execute(
         'SELECT m.id, m.date, m.location, u.username, creator_id, movie.title, movie.summary, m.num_attendees'
         ' FROM meeting m NATURAL JOIN user u NATURAL JOIN movie'
-        ' WHERE m.id = ?'
+        ' WHERE m.id = ?',
         (id,)
     ).fetchone()
 
     if meeting is None:
         abort(404, f"Meeting id {id} doesn't exist.")
 
-    if check_author and meeting['author_id'] != g.user['id']:
+    if check_author and meeting['creator_id'] != g.user['id']:
         abort(403)
 
     return meeting
@@ -92,6 +89,9 @@ def update(id):
         location = request.form['location']
         error = None
 
+        # Parse the release_date from the form
+        parsed_time = datetime.strptime(time, '%m-%d-%Y %H:%M:%S')
+
         if not title:
             error = 'Title is required.'
         if not time:
@@ -101,12 +101,7 @@ def update(id):
             error = 'Location is required.'
 
         db = get_db()
-        movie = db.execute(
-            '''SELECT title
-            FROM movie
-            WHERE UPPER(title) = UPPER(?)''',
-            (title,)
-        ).fetchone()
+        movie = get_movie_by_title(title)
 
         if not movie:
             error = 'That movie does not exist yet!'
@@ -116,9 +111,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE meeting SET title = ?, date = ?, movie_id = ?, location = ?'
+                'UPDATE meeting SET date = ?, movie_id = ?, location = ?'
                 ' WHERE id = ?',
-                (title, time, movie['id'], location, id)
+                (parsed_time, movie['id'], location, id)
             )
             db.commit()
             return redirect(url_for('meeting.index'))

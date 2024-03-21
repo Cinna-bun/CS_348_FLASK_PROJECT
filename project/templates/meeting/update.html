@@ -10,9 +10,9 @@
     <input name="title" id="title"
       value="{{ request.form['title'] or meeting['title'] }}" required>
     <label for="time">Time</label>
-    <textarea name="time" id="time">{{ request.form['time'] or meeting['time'] }}</textarea>
-    <label for="time">Time</label>
-    <textarea name="location" id="location">{{ request.form['location'] or meeting['location'] }}</textarea>
+    <input name="time" id="time">{{ request.form['time'] or meeting['time'] }}</input>
+    <label for="time">Location</label>
+    <input name="location" id="location">{{ request.form['location'] or meeting['location'] }}</input>
     <input type="submit" value="Save">
   </form>
   <hr>

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Movie Title</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <label for="time">Time (mm-dd-yyyy hh:mm:ss)</label>
+    <textarea name="time" id="time">{{ request.form['time'] }}</textarea>
+    <label for="time">Location</label>
+    <textarea name="location" id="location">{{ request.form['location'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

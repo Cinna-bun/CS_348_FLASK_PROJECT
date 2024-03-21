@@ -1,3 +1,5 @@
 flask --app hello run
 
-flask --app hello run --debug
+flask --app project run --debug
+
+flask --app project init-db

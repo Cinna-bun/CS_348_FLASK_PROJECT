@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS movie;
+DROP TABLE IF EXISTS party;
+DROP TABLE IF EXISTS attendance_records;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -7,11 +9,28 @@ CREATE TABLE user (
   password TEXT NOT NULL
 );
 
-CREATE TABLE post (
+CREATE TABLE movie (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  author_id INTEGER NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title TEXT NOT NULL,
-  body TEXT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES user (id)
+  released TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  title TEXT UNIQUE NOT NULL,
+  summary TEXT NOT NULL
+);
+
+CREATE TABLE meeting (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    creator_id INTEGER NOT NULL,
+    date TIMESTAMP NOT NULL,
+    movie_id INTEGER NOT NULL,
+    location TEXT NOT NULL,
+    num_attendees INTEGER NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movie (id),
+    FOREIGN KEY (creator_id) REFERENCES user (id)
+);
+
+CREATE TABLE attendance_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    meeting_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (meeting_id) REFERENCES meeting (id)
 );

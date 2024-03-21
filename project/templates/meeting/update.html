@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ meeting['title'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Title</label>
+    <input name="title" id="title"
+      value="{{ request.form['title'] or meeting['title'] }}" required>
+    <label for="time">Time</label>
+    <textarea name="time" id="time">{{ request.form['time'] or meeting['time'] }}</textarea>
+    <label for="time">Time</label>
+    <textarea name="location" id="location">{{ request.form['location'] or meeting['location'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('meeting.delete', id=meeting['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}

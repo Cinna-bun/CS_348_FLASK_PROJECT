@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Movies{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('movie.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for movie in movies %}
+    <article class="movie">
+      <header>
+        <div>
+          <h1>{{ movie['title'] }}</h1>
+          <div>id: {{  movie['id'] }}</div>
+          <div class="about">Released on {{ movie['released'].strftime('%Y-%m-%d') }}</div>
+        </div>
+      </header>
+      <p class="body">{{ movie['summary'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

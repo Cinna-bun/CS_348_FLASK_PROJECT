@@ -39,4 +39,8 @@ def create_app(test_config=None):
     app.register_blueprint(meeting.bp)
     app.add_url_rule('/', endpoint='index')
 
+    from . import movie
+    app.register_blueprint(movie.bp)
+    app.add_url_rule('/', endpoint='index')
+
     return app

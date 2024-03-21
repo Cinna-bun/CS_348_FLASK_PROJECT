@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Posts{% endblock %}</h1>
+  <h1>{% block title %}Meetings{% endblock %}</h1>
   {% if g.user %}
     <a class="action" href="{{ url_for('meeting.create') }}">New</a>
   {% endif %}
@@ -12,14 +12,14 @@
     <article class="meeting">
       <header>
         <div>
-          <h1>{{ post['title'] }}</h1>
+          <h1>{{ meeting['title'] }}</h1>
           <div class="about">by {{ meeting['username'] }} on {{ meeting['date'].strftime('%Y-%m-%d') }}</div>
         </div>
-        {% if g.user['id'] == meeting['author_id'] %}
-          <a class="action" href="{{ url_for('meeting.update', id=meeting['id']) }}">Edit</a>
-        {% endif %}
       </header>
       <p class="body">{{ meeting['summary'] }}</p>
+      {% if g.user['id'] == meeting['creator_id'] %}
+          <a class="action" href="{{ url_for('meeting.update', id=meeting['id']) }}">Edit</a>
+      {% endif %}
     </article>
     {% if not loop.last %}
       <hr>

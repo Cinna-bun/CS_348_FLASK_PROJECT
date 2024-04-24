@@ -9,16 +9,21 @@
 
 {% block content %}
   {% for movie in movies %}
-    <article class="movie">
-      <header>
-        <div>
-          <h1>{{ movie['title'] }}</h1>
-          <div>id: {{  movie['id'] }}</div>
-          <div class="about">Released on {{ movie['released'].strftime('%Y-%m-%d') }}</div>
-        </div>
-      </header>
-      <p class="body">{{ movie['summary'] }}</p>
-    </article>
+    <form method="post">
+      <input style="display: none;" type="text" value="{{ movie.id }}" id="movie" name="movie">
+      <article class="movie">
+        <header>
+          <div>
+            <h1>{{ movie['title'] }}</h1>
+            <div>id: {{  movie['id'] }}</div>
+            <div class="about">Released on {{ movie['released'].strftime('%Y-%m-%d') }}</div>
+            <div>Length: {{ movie['duration_in_hours'] }} hours</div>
+          </div>
+        </header>
+        <p class="body">{{ movie['summary'] }}</p>
+        <input type="submit" value="Delete">
+      </article>
+    </form>
     {% if not loop.last %}
       <hr>
     {% endif %}

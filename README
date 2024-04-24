@@ -5,3 +5,10 @@ flask --app project run --debug
 flask --app project init-db
 
 https://flask.palletsprojects.com/en/3.0.x/tutorial/blog/
+
+
+FOR schema.sql
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS movie;
+DROP TABLE IF EXISTS meeting;
+DROP TABLE IF EXISTS attendance_records;

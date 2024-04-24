@@ -34,14 +34,31 @@ def get_movie_by_title(title):
     }
 
 
-@bp.route('/movies')
+@bp.route('/movies', methods=('GET', 'POST'))
 def index():
-    db = get_db()
+    db = get_db()  # Retrieve the database connection
+
+    # Handle POST requests to delete a movie
+    if request.method == 'POST':
+        movie_id = request.form.get('movie')  # Get the movie ID from the form
+        if movie_id:  # Check if a valid ID is provided
+            try:
+                # Delete the movie with the specified ID
+                db.execute('DELETE FROM movie WHERE id = ?', (movie_id,))
+                db.commit()  # Commit the transaction
+                flash(f"Movie with ID {movie_id} deleted successfully.")  # Flash a success message
+            except Exception as e:
+                # Handle exceptions (like foreign key constraints)
+                flash(f"Failed to delete movie: {e}")  # Flash an error message
+
+    # Retrieve all movies for display, ordered by release date (descending)
     movies = db.execute(
-        'SELECT id, released, title, summary'
-        ' FROM movie'
-        ' ORDER BY released DESC'
+        'SELECT * '
+        'FROM movie '
+        'ORDER BY released DESC'
     ).fetchall()
+
+    # Render the template and pass the movies list to it
     return render_template('movie/index.html', movies=movies)
 
 
@@ -52,6 +69,7 @@ def create():
         title = request.form['title']
         release_date = request.form['release_date']
         summary = request.form['summary']
+        duration = request.form['duration']
         error = None
 
         from datetime import datetime
@@ -79,9 +97,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO movie (released, title, summary)'
-                ' VALUES (?, ?, ?)',
-                (parsed_release_date, title, summary)
+                'INSERT INTO movie (released, title, summary, duration_in_hours)'
+                ' VALUES (?, ?, ?, ?)',
+                (parsed_release_date, title, summary, duration)
             )
             db.commit()
             return redirect(url_for('movie.index'))

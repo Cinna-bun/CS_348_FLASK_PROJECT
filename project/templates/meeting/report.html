@@ -1,0 +1,32 @@
+<!-- Template for report form -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Generate Meeting Report</h1>
+  
+  <form action="{{ url_for('meeting.report') }}" method="post">
+    <label for="movie_id">Select Movie:</label>
+    <select name="movie_id" id="movie_id">
+      <option value="">-- All Movies --</option>
+      {% for movie in movies %}
+        <option value="{{ movie['id'] }}">{{ movie['title'] }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" id="start_date">
+
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date" id="end_date">
+
+    <label for="location">Select Location:</label>
+    <select name="location" id="location">
+      <option value="">-- All Locations --</option>
+      {% for location in locations %}
+        <option value="{{ location['location'] }}">{{ location['location'] }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Generate Report</button>
+  </form>
+{% endblock %}

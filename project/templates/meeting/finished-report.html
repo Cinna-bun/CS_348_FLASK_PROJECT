@@ -1,0 +1,27 @@
+<!-- Template to display the report -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Meeting Report</h1>
+
+  <h2>Statistics</h2>
+  <p>Average Number of Attendees: {{ avg_attendees }}</p>
+  <p>Most Frequent Location: {{ most_frequent_location }}</p>
+  <p>Average Meeting Duration: {{ avg_duration }} minutes</p>
+
+  <h2>Meetings</h2>
+  <ul>
+    {% for meeting in meetings %}
+      <li>
+        Meeting ID: {{ meeting['id'] }},
+        Date: {{ meeting['date'] }},
+        Location: {{ meeting['location'] }},
+        Movie: {{ meeting['title'] }},
+        Attendees: {{ meeting['num_attendees'] }},
+        Duration: {{ meeting['duration_in_hours'] }} hours
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{{ url_for('meeting.report') }}">Back to Report Form</a>
+{% endblock %}
